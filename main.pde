@@ -1,4 +1,4 @@
-final double WALK_AMOUNT = 0.5;
+final double WALK_AMOUNT = 0.1;
 
 double r1 () { return random (0, 255); }
 double r2 () { return random (10, width-10); }
@@ -16,6 +16,8 @@ int count (Object[] objs) {
 
 class Shape {
     protected double[][] points = new double[15][7];
+    // protected PVector[][] vels = new PVector[15][7];
+    // protected PVector[][] accs = new PVector[15][7];
     protected int pc = 0;
     protected color s, bg;
 
@@ -76,7 +78,24 @@ class Shape {
     }
 
     void update () {
-
+        for (int i = 0; i < this.pc; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (j == 2) {continue;}
+                this.points[i][j] += r5();
+            } 
+        }
+        this.s = color(
+            constrain(red(this.s) + r5(), 0, 255),
+            constrain(green(this.s) + r5(), 0, 255),
+            constrain(blue(this.s) + r5(), 0, 255),
+            constrain(alpha(this.s) + r5(), 0, 255)
+        );
+        this.bg = color(
+            constrain(red(this.bg) + r5(), 0, 255),
+            constrain(green(this.bg) + r5(), 0, 255),
+            constrain(blue(this.bg) + r5(), 0, 255),
+            constrain(alpha(this.bg) + r5(), 0, 255)
+        );
     }
 }
 
@@ -99,11 +118,11 @@ class Quad extends Shape {
 
 class Circle {
     double x, y, w, h, r;
-    color s, b;
+    color s, bg;
 
     Circle () {
         this.s = color(r1(), r1(), r1(), r1());
-        this.b = color(r1(), r1(), r1(), r1());
+        this.bg = color(r1(), r1(), r1(), r1());
         this.x = r2();
         this.y = r2();
         this.w = r3();
@@ -113,7 +132,7 @@ class Circle {
 
     void draw () {
         stroke(this.s);
-        fill(this.b);
+        fill(this.bg);
         pushMatrix();
         translate(this.x, this.y);
         rotate(this.r);
@@ -122,7 +141,24 @@ class Circle {
     }
     
     void update () {
+        this.x += r5();
+        this.y += r5();
+        this.w += r5();
+        this.h += r5();
+        this.r += r5() / 10;
 
+        this.s = color(
+            constrain(red(this.s) + r5(), 0, 255),
+            constrain(green(this.s) + r5(), 0, 255),
+            constrain(blue(this.s) + r5(), 0, 255),
+            constrain(alpha(this.s) + r5(), 0, 255)
+        );
+        this.bg = color(
+            constrain(red(this.bg) + r5(), 0, 255),
+            constrain(green(this.bg) + r5(), 0, 255),
+            constrain(blue(this.bg) + r5(), 0, 255),
+            constrain(alpha(this.bg) + r5(), 0, 255)
+        );
     }
 }
 
