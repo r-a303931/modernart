@@ -1,9 +1,10 @@
+final double WALK_AMOUNT = 0.5;
+
 double r1 () { return random (0, 255); }
-double r2 () { return random (10, 490); }
+double r2 () { return random (10, width-10); }
 double r3 () { return random (10, 60); }
 double r4 () { return random (-60, 60); }
-
-double WALK_AMOUNT = 0.1;
+double r5 () { return random (-WALK_AMOUNT, WALK_AMOUNT); }
 
 int count (Object[] objs) {
     int j = 0, i = 0;
@@ -15,6 +16,7 @@ int count (Object[] objs) {
 
 class Shape {
     protected double[][] points = new double[15][7];
+    protected int pc = 0;
     protected color s, bg;
 
     Shape () {
@@ -25,6 +27,7 @@ class Shape {
 
     void setup () {
         int pc = int(random(5, 15));
+        this.pc = pc;
         double r_1 = r2();
         double r_2 = r2();
         points[0][0] = r_1 + r4();
@@ -45,8 +48,12 @@ class Shape {
         stroke(this.s);
         fill(this.bg);
         beginShape();
-        for (int i = 0; i < count(this.points); i++) {
+        for (int i = 0; i < this.pc; i++) {
             double[7] p = this.points[i];
+            if (p[0] < 15 && p[1] < 15) {
+                console.log(p);
+                console.log(i);
+            }
             switch(p[2]) {
                 case 0 : 
                     vertex(p[0], p[1]);
@@ -79,10 +86,10 @@ class Quad extends Shape {
     }
 
     void setup () {
-        int pc = 4;
+        this.pc = 4;
         double r_1 = r2();
         double r_2 = r2();
-        for (int i = 0; i < pc; i++) {
+        for (int i = 0; i < this.pc; i++) {
             points[i][0] = r_1 + r4();
             points[i][1] = r_2 + r4();
             points[i][2] = 0;
@@ -125,10 +132,10 @@ class Triangle extends Shape {
     }
 
     void setup () {
-        int pc = 3;
+        this.pc = 3;
         double r_1 = r2();
         double r_2 = r2();
-        for (int i = 0; i < pc; i++) {
+        for (int i = 0; i < this.pc; i++) {
             points[i][0] = r_1 + r4();
             points[i][1] = r_2 + r4();
             points[i][2] = 0;
@@ -165,7 +172,7 @@ void draw () {
         shapes[i].update();
     }
     for (int i = 0; i < 60; i++) {
-        rects[i].draw();
+        rects[  i].draw();
         rects[i].update();
     }
     for (int i = 0; i < 60; i++) {
