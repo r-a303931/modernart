@@ -1,10 +1,11 @@
-final double WALK_AMOUNT = 0.0001;
+final double WALK_AMOUNT = 1;
 
 double r1 () { return random (0, 255); }
 double r2 () { return random (10, width-10); }
 double r3 () { return random (10, 60); }
 double r4 () { return random (-60, 60); }
 double r5 () { return random (-WALK_AMOUNT, WALK_AMOUNT); }
+double r6 () { return random (-0.0001, 0.0001); }
 
 PVector center = new PVector(width / 2, height / 2);
 color bg = color(r1(), r1(), r1(), r1());
@@ -105,7 +106,7 @@ class Shape {
                 
                 points[i][j].add(vels[i][j]);
                 vels[i][j].add(accs[i][j]);
-                vels[i][j].set(constrain(vels[i][j].x, -.5, .5), constrain(vels[i][j].y, -.5, .5));
+                vels[i][j].set(constrain(vels[i][j].x, -.1, .1), constrain(vels[i][j].y, -.1, .1));
                 accs[i][j].mult(0);
             }
         }
@@ -175,7 +176,11 @@ class Circle {
         this.h += vels[3];
         this.r += vels[4] / 10;
         for (int i = 0; i < 5; i++) {
-            this.accs[i] = r5();
+            this.accs[i] = r6();
+        }
+
+        for (int i = 0; i < 5; i++) {
+            this.vels[i] = constrain(this.vels[i], -.05, .05);
         }
 
         this.s = color(
@@ -224,7 +229,7 @@ void setup () {
         tris[i] = new Triangle();
     }
     background(255);
-    frameRate(10);
+    frameRate(60);
 }
 
 
