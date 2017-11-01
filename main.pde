@@ -1,4 +1,4 @@
-final double WALK_AMOUNT = 0.001;
+final double WALK_AMOUNT = 0.0001;
 
 double r1 () { return random (0, 255); }
 double r2 () { return random (10, width-10); }
@@ -7,6 +7,7 @@ double r4 () { return random (-60, 60); }
 double r5 () { return random (-WALK_AMOUNT, WALK_AMOUNT); }
 
 PVector center = new PVector(width / 2, height / 2);
+color bg = color(r1(), r1(), r1(), r1());
 
 int count (Object[] objs) {
     int j = 0, i = 0;
@@ -34,21 +35,23 @@ class Shape {
     void setup () {
         double r_1 = r2();
         double r_2 = r2();
-        points[0][0] = new PVector(r_1 + r4(), r_2 + r4());
-        pType[0] = 0;
-        vels[0][0] = new PVector(r5(), r5());
-        accs[0][0] = new PVector(0, 0);
+        this.points[0][0] = new PVector(r_1 + r4(), r_2 + r4());
+        this.pType[0] = 0;
+        this.vels[0][0] = new PVector(r5(), r5());
+        this.accs[0][0] = new PVector(0, 0);
         for (int i = 1; i < this.pc; i++) {
-            pType[i] = int(random(0, 3));
+            this.pType[i] = int(random(0, 3));
             for (int j = 0; j < 3; j++) {
-                points[i][j] = new PVector(r_1 + r4(), r_2 + r4());
-                vels[i][j] = new PVector(r5(), r5());
-                accs[i][j] = new PVector(0, 0);
+                this.points[i][j] = new PVector(r_1 + r4(), r_2 + r4());
+                this.vels[i][j] = new PVector(r5(), r5());
+                this.accs[i][j] = new PVector(0, 0);
             }
         }
     }
 
-    void draw () {
+    void draw (int j) {
+        console.log(j);
+        console.log(this.points);
         stroke(this.s);
         fill(this.bg);
         beginShape();
@@ -102,7 +105,7 @@ class Shape {
                 
                 points[i][j].add(vels[i][j]);
                 vels[i][j].add(accs[i][j]);
-                vels[i][j].set(constrain(vels[i][j].x, -1, 1), constrain(vels[i][j].y, -1, 1));
+                vels[i][j].set(constrain(vels[i][j].x, -.5, .5), constrain(vels[i][j].y, -.5, .5));
                 accs[i][j].mult(0);
             }
         }
@@ -199,16 +202,17 @@ class Triangle extends Shape {
     }
 }
 
-Shape[] shapes = new Shape[20];
-Quad[] rects = new Quad[20];
-Circle[] circles = new Circle[20];
-Triangle[] tris = new Triangle[20];
+Shape[] shapes = new Shape[30];
+Quad[] rects = new Quad[30];
+Circle[] circles = new Circle[30];
+Triangle[] tris = new Triangle[30];
 
 
 void setup () {
-    size(500, 500);
+    size(1000, 1000);
     for (int i = 0; i < shapes.length; i++) {
         shapes[i] = new Shape();
+        shapes[i].setup();
     }
     for (int i = 0; i < rects.length; i++) {
         rects[i] = new Quad();
@@ -220,18 +224,19 @@ void setup () {
         tris[i] = new Triangle();
     }
     background(255);
-    console.log(tris);
+    frameRate(10);
 }
 
 
 void draw () {
-    background(255);
+    background(bg);
     for (int i = 0; i < shapes.length; i++) {
-        shapes[i].draw();
+        console.log(shapes[i]);
+        shapes[i].draw(i);
         shapes[i].update();
     }
     for (int i = 0; i < rects.length; i++) {
-        rects[i].draw();
+        rects[i].draw(i);
         rects[i].update();
     }
     for (int i = 0; i < circles.length; i++) {
@@ -239,7 +244,13 @@ void draw () {
         circles[i].update();
     }
     for (int i = 0; i < tris.length; i++) {
-        tris[i].draw();
+        tris[i].draw(i);
         tris[i].update();
     }
+    bg = color(
+        constrain(red(bg) + r5(), 0, 255),
+        constrain(green(bg) + r5(), 0, 255),
+        constrain(blue(bg) + r5(), 0, 255),
+        constrain(alpha(bg) + r5(), 0, 255)
+    );
 }
